@@ -1,0 +1,58 @@
+<Window x:Class="DM.App.Views.SettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Cài đặt" Width="500" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="{StaticResource Bg}" FontFamily="Segoe UI">
+    <Border Margin="16" Background="{StaticResource Card}" CornerRadius="12"
+            BorderBrush="{StaticResource Line}" BorderThickness="1" Padding="18">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="190"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Số segment (đa luồng)" VerticalAlignment="Center" Margin="0,7" Foreground="{StaticResource TextPrimary}"/>
+            <TextBox x:Name="SegmentBox" Grid.Column="1" Style="{StaticResource InputBox}" Margin="0,5"/>
+
+            <TextBlock Text="Số tải đồng thời" Grid.Row="1" VerticalAlignment="Center" Margin="0,7" Foreground="{StaticResource TextPrimary}"/>
+            <TextBox x:Name="ConcurrentBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource InputBox}" Margin="0,5"/>
+
+            <TextBlock Text="Giới hạn tốc độ (KB/s, 0=∞)" Grid.Row="2" VerticalAlignment="Center" Margin="0,7" Foreground="{StaticResource TextPrimary}"/>
+            <TextBox x:Name="SpeedBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource InputBox}" Margin="0,5"/>
+
+            <TextBlock Text="Cổng local server" Grid.Row="3" VerticalAlignment="Center" Margin="0,7" Foreground="{StaticResource TextPrimary}"/>
+            <TextBox x:Name="PortBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource InputBox}" Margin="0,5"/>
+
+            <TextBlock Text="Thư mục lưu" Grid.Row="4" VerticalAlignment="Center" Margin="0,7" Foreground="{StaticResource TextPrimary}"/>
+            <TextBox x:Name="DirBox" Grid.Row="4" Grid.Column="1" Style="{StaticResource InputBox}" Margin="0,5"/>
+
+            <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="0,12,0,0">
+                <CheckBox x:Name="StartupCheck" Content="Khởi động cùng Windows" Foreground="{StaticResource TextPrimary}"/>
+                <TextBlock Text="Token ghép nối extension (dán vào popup extension)"
+                           Margin="0,12,0,5" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
+                <DockPanel>
+                    <Button x:Name="CopyTokenButton" Content="Copy" Style="{StaticResource GhostButton}"
+                            DockPanel.Dock="Right" Margin="8,0,0,0" Click="OnCopyToken"/>
+                    <TextBox x:Name="TokenBox" IsReadOnly="True" Style="{StaticResource InputBox}"/>
+                </DockPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+                <Button Content="Hủy" Style="{StaticResource GhostButton}" Width="90" IsCancel="True"/>
+                <Button Content="Lưu" Style="{StaticResource PrimaryButton}" Width="90" Margin="8,0,0,0"
+                        IsDefault="True" Click="OnOkClick"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

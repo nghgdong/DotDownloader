@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "DotDownloader",
+  "version": "0.1.0",
+  "description": "Bắt link tải & phát hiện video (HLS/DASH/MP4) trên trình duyệt, đẩy sang app DotDownloader để tải đa luồng.",
+  "permissions": [
+    "downloads",
+    "contextMenus",
+    "storage",
+    "cookies",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "DotDownloader"
+  }
+}

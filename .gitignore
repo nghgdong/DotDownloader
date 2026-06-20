@@ -1,0 +1,47 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.cache
+
+## Rider
+.idea/
+
+## VS Code
+.vscode/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+## NuGet
+*.nupkg
+packages/
+
+## App data / output
+*.dmmeta
+tasks.json
+config.json
+
+## FFmpeg binary (tải riêng, không commit)
+tools/ffmpeg/*.exe
+
+## Publish output
+publish/
+publish-*/
+
+## Artefact tạm
+applog*.txt
+ui_*.png
+*.shot.png
+settings.json
+
+## OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    :root { --accent: #2d7ff9; }
+    body {
+      width: 320px;
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      background: #fff;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+    }
+    header .title { font-weight: 600; }
+    .status { padding: 8px 12px; font-size: 12px; }
+    .status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .dot.on { background: #2bb673; }
+    .dot.off { background: #d34; }
+    .switch { position: relative; display: inline-block; width: 38px; height: 20px; }
+    .switch input { display: none; }
+    .slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 20px; transition: .2s; }
+    .slider:before { content: ""; position: absolute; height: 16px; width: 16px; left: 2px; top: 2px; background: #fff; border-radius: 50%; transition: .2s; }
+    input:checked + .slider { background: var(--accent); }
+    input:checked + .slider:before { transform: translateX(18px); }
+    .videos { max-height: 280px; overflow-y: auto; border-top: 1px solid #eee; }
+    .videos h3 { font-size: 12px; margin: 10px 12px 6px; color: #555; }
+    .video {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-top: 1px solid #f2f2f2;
+    }
+    .video .meta { flex: 1; min-width: 0; }
+    .video .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .badge {
+      font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
+      background: #eef4ff; color: var(--accent);
+    }
+    button.dl {
+      border: none; background: var(--accent); color: #fff;
+      padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;
+    }
+    button.dl:disabled { background: #aaa; cursor: default; }
+    .empty { padding: 14px 12px; color: #888; }
+    .toast { padding: 6px 12px; font-size: 12px; color: #2bb673; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="title">DotDownloader</span>
+    <label class="switch">
+      <input type="checkbox" id="toggleEnabled" />
+      <span class="slider"></span>
+    </label>
+  </header>
+
+  <div class="status">
+    <span class="dot off" id="statusDot"></span>
+    <span id="statusText">Đang kiểm tra…</span>
+  </div>
+
+  <div class="token-row" style="display:flex;gap:6px;align-items:center;padding:6px 12px;border-top:1px solid #eee;">
+    <span style="font-size:12px;color:#555;">Token:</span>
+    <input id="tokenInput" type="text" placeholder="dán token từ app (Cài đặt)"
+           style="flex:1;min-width:0;font-size:12px;padding:3px 6px;" />
+    <button id="tokenSave" class="dl" style="padding:4px 8px;">Lưu</button>
+  </div>
+
+  <div class="videos">
+    <h3>Video phát hiện trên tab này</h3>
+    <div id="videoList"><div class="empty">Chưa phát hiện video.</div></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

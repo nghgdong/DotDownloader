@@ -1,0 +1,161 @@
+<Window x:Class="DM.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DotDownloader" Height="600" Width="1000" MinWidth="820" MinHeight="460"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Bg}"
+        FontFamily="Segoe UI" UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource Card}" BorderBrush="{StaticResource Line}"
+                BorderThickness="0,0,0,1" Padding="18,12">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="30" Height="30" CornerRadius="8" Background="{StaticResource Accent}">
+                        <TextBlock Text="↓" Foreground="White" FontSize="18" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="DotDownloader" FontSize="18" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="＋  Thêm URL" Style="{StaticResource PrimaryButton}" Click="OnAddClick"/>
+                    <Button Content="⏸" ToolTip="Tạm dừng" Style="{StaticResource GhostButton}"
+                            Command="{Binding PauseCommand}" Margin="10,0,0,0"/>
+                    <Button Content="▶" ToolTip="Tiếp tục" Style="{StaticResource GhostButton}"
+                            Command="{Binding ResumeCommand}"/>
+                    <Button Content="✕" ToolTip="Hủy" Style="{StaticResource GhostButton}"
+                            Command="{Binding CancelCommand}"/>
+                    <Button Content="🗑" ToolTip="Xóa" Style="{StaticResource GhostButton}"
+                            Command="{Binding DeleteCommand}"/>
+                    <Border Width="1" Background="{StaticResource Line}" Margin="8,4"/>
+                    <Button Content="⏸ Tất cả" ToolTip="Tạm dừng tất cả" Style="{StaticResource GhostButton}"
+                            Command="{Binding PauseAllCommand}"/>
+                    <Button Content="▶ Tất cả" ToolTip="Tiếp tục tất cả" Style="{StaticResource GhostButton}"
+                            Command="{Binding ResumeAllCommand}"/>
+                    <Button Content="⚙" ToolTip="Cài đặt" Style="{StaticResource GhostButton}"
+                            Click="OnSettingsClick" Margin="10,0,0,0"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Body -->
+        <Grid Grid.Row="1" Margin="18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar -->
+            <Border Grid.Column="0" Background="{StaticResource Card}" CornerRadius="12"
+                    BorderBrush="{StaticResource Line}" BorderThickness="1" Padding="10,6,10,10" Margin="0,0,14,0">
+                <StackPanel>
+                    <TextBlock Text="TRẠNG THÁI" Style="{StaticResource SidebarHeading}"/>
+                    <ListBox ItemsSource="{Binding StatusFilters}" SelectedItem="{Binding StatusFilter}"
+                             Style="{StaticResource FilterList}" ItemContainerStyle="{StaticResource FilterItem}"/>
+                    <TextBlock Text="PHÂN LOẠI" Style="{StaticResource SidebarHeading}"/>
+                    <ListBox ItemsSource="{Binding Categories}" SelectedItem="{Binding CategoryFilter}"
+                             Style="{StaticResource FilterList}" ItemContainerStyle="{StaticResource FilterItem}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Danh sách tải -->
+            <Border Grid.Column="1" Background="{StaticResource Card}" CornerRadius="12"
+                    BorderBrush="{StaticResource Line}" BorderThickness="1" Padding="6">
+                <DataGrid ItemsSource="{Binding ItemsView}" SelectedItem="{Binding SelectedItem}"
+                          Style="{StaticResource CleanGrid}"
+                          ColumnHeaderStyle="{StaticResource GridHeader}"
+                          RowStyle="{StaticResource GridRow}"
+                          CellStyle="{StaticResource GridCell}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Tên" Width="2.2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding FileName}" FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding Url}" FontSize="11" Foreground="{StaticResource TextSecondary}"
+                                                   TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Kích thước" Binding="{Binding SizeText}" Width="90">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Header="Tiến độ" Width="170">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid VerticalAlignment="Center">
+                                        <ProgressBar Style="{StaticResource RoundedProgress}"
+                                                     Minimum="0" Maximum="100" Value="{Binding ProgressPercent}"
+                                                     Foreground="{Binding State, Converter={StaticResource StateBrush}}"/>
+                                        <TextBlock Text="{Binding ProgressPercent, StringFormat={}{0:0}%}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Tốc độ" Binding="{Binding SpeedText}" Width="95">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Còn lại" Binding="{Binding EtaText}" Width="70">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Header="Trạng thái" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="10" Padding="9,3" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            Background="{Binding State, Converter={StaticResource StateLightBrush}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="7" Height="7" VerticalAlignment="Center"
+                                                     Fill="{Binding State, Converter={StaticResource StateBrush}}"/>
+                                            <TextBlock Text="{Binding State, Converter={StaticResource StateText}}"
+                                                       Margin="6,0,0,0" FontSize="12" FontWeight="SemiBold"
+                                                       Foreground="{Binding State, Converter={StaticResource StateBrush}}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Loại" Binding="{Binding Category}" Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
