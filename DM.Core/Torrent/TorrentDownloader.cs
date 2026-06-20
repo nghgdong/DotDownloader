@@ -90,7 +90,9 @@ public sealed class TorrentDownloader : IAsyncDisposable
                     BytesPerSecond = bps,
                     Eta = (total > 0 && bps > 0 && done < total)
                         ? TimeSpan.FromSeconds((total - done) / bps) : null,
-                    State = DownloadState.Downloading
+                    State = DownloadState.Downloading,
+                    Seeds = manager.Peers.Seeds,
+                    Peers = manager.OpenConnections
                 });
 
                 if (manager.Complete)

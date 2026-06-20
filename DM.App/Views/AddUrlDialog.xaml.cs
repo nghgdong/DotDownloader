@@ -1,3 +1,5 @@
+using System.IO;
+using System.Linq;
 using System.Windows;
 using DM.Core.Net;
 
@@ -53,6 +55,50 @@ public partial class AddUrlDialog : Window
         {
             ProbeButton.IsEnabled = true;
         }
+    }
+
+    private void OnBrowseClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Chọn file .torrent",
+            Filter = "Torrent (*.torrent)|*.torrent|Tất cả (*.*)|*.*",
+            CheckFileExists = true
+        };
+        if (dialog.ShowDialog(this) == true)
+        {
+            SetTorrentFile(dialog.FileName);
+        }
+    }
+
+    private void OnDragOver(object sender, System.Windows.DragEventArgs e)
+    {
+        e.Effects = e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop)
+            ? System.Windows.DragDropEffects.Copy
+            : System.Windows.DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    private void OnDrop(object sender, System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetData(System.Windows.DataFormats.FileDrop) is string[] files && files.Length > 0)
+        {
+            var torrent = files.FirstOrDefault(f => f.EndsWith(".torrent", StringComparison.OrdinalIgnoreCase))
+                          ?? files[0];
+            SetTorrentFile(torrent);
+        }
+    }
+
+    private void SetTorrentFile(string path)
+    {
+        UrlBox.Text = path;
+        if (string.IsNullOrWhiteSpace(FileNameBox.Text))
+        {
+            FileNameBox.Text = path.EndsWith(".torrent", StringComparison.OrdinalIgnoreCase)
+                ? Path.GetFileNameWithoutExtension(path)
+                : Path.GetFileName(path);
+        }
+        InfoText.Text = "Đã chọn .torrent — bấm Tải để bắt đầu (dung lượng biết sau khi lấy metadata).";
     }
 
     private void OnOkClick(object sender, RoutedEventArgs e)

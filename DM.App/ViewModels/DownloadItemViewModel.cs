@@ -16,6 +16,7 @@ public partial class DownloadItemViewModel : ObservableObject, IDisposable
     [ObservableProperty] private double progressPercent;
     [ObservableProperty] private string speedText = "";
     [ObservableProperty] private string etaText = "";
+    [ObservableProperty] private string peersText = "";
     [ObservableProperty] private DownloadState state;
 
     public string FileName =>
@@ -23,6 +24,7 @@ public partial class DownloadItemViewModel : ObservableObject, IDisposable
     public string SizeText => FormatBytes(Task.TotalBytes);
     public string Category => Task.Category ?? "Other";
     public string Url => Task.Url;
+    public bool IsTorrent => string.Equals(Task.StreamType, "Torrent", StringComparison.OrdinalIgnoreCase);
 
     private readonly DispatcherTimer _timer;
     private readonly object _gate = new();
@@ -64,6 +66,10 @@ public partial class DownloadItemViewModel : ObservableObject, IDisposable
             : (r.State == DownloadState.Completed ? 100 : ProgressPercent);
         SpeedText = r.State == DownloadState.Downloading ? FormatSpeed(r.BytesPerSecond) : "";
         EtaText = r.State == DownloadState.Downloading && r.Eta is { } e ? FormatEta(e) : "";
+        if (r.Seeds is { } s && r.Peers is { } p) // chỉ torrent mới có
+        {
+            PeersText = $"{s} / {p}";
+        }
         if (r.State == DownloadState.Completed)
         {
             ProgressPercent = 100;

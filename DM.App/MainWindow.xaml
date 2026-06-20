@@ -1,7 +1,7 @@
 <Window x:Class="DM.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="DotDownloader" Height="600" Width="1000" MinWidth="820" MinHeight="460"
+        Title="DotDownloader" Height="600" Width="1090" MinWidth="900" MinHeight="460"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource Bg}"
         FontFamily="Segoe UI" UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
@@ -120,6 +120,15 @@
                         </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Còn lại" Binding="{Binding EtaText}" Width="70">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Seeds / Peers" Binding="{Binding PeersText}" Width="90">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>

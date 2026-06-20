@@ -41,8 +41,18 @@ Một số test e2e (HLS/DASH/torrent/benchmark) chỉ chạy khi đặt `DM_NET
 2. Mở app, vào **Cài đặt** copy token → dán vào ô Token trong popup extension.
 3. Click link/bấm Tải video trên trang → đẩy sang app.
 
-## Đóng gói
-`dotnet publish DM.App -c Release -r win-x64 -o publish` rồi build installer bằng Inno Setup (`installer/DotDownloader.iss`). Xem `installer/README.md`.
+## Đóng gói & ký số
+Một lệnh publish self-contained + bundle FFmpeg/extension + (tùy chọn) ký số + zip:
+```powershell
+./publish.ps1                                   # tạo dist/ + DotDownloader-win-x64.zip (chưa ký)
+./publish.ps1 -DevSelfSigned                    # ký bằng self-signed (dev; chỉ hợp lệ khi Smart App Control TẮT)
+./publish.ps1 -Pfx C:\certs\dotdl.pfx -Password '***'   # ký bằng cert thật
+```
+`sign.ps1` chỉ ký **binary của DotDownloader** (`DM.App.exe/.dll`, `DM.Core.dll`, `DM.Server.dll`) — KHÔNG ký ffmpeg/.NET runtime/third-party. Cần `signtool` (Windows SDK).
+
+> ⚠️ Windows 11 **Smart App Control** chỉ tin cert chain tới Microsoft + uy tín cloud → cần **EV code-signing cert** mới qua được; self-signed/ OV cert chưa đủ. Trên máy bật SAC, để chạy bản tự build phải tắt SAC hoặc dùng EV cert.
+
+Cách khác: build installer 1-click bằng Inno Setup (`installer/DotDownloader.iss`). Xem `installer/README.md`.
 
 ## Trạng thái
 Đã hoàn tất Phase 0–9 (xem `docs/TASKS.md`). Doc-first: đọc `docs/CLAUDE.md` trước mỗi phiên, làm theo `docs/TASKS.md` một task mỗi lần.

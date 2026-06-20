@@ -18,6 +18,7 @@ public partial class App : System.Windows.Application
     private MainViewModel? _viewModel;
     private LocalServer? _server;
     private TorrentDownloader? _torrent;
+    private System.Windows.Threading.DispatcherTimer? _keepAwakeTimer;
 
     public string? ServerToken { get; private set; }
     public int ServerPort { get; private set; }
@@ -55,10 +56,20 @@ public partial class App : System.Windows.Application
         var window = new MainWindow(_viewModel, _settings);
         MainWindow = window;
         window.Show();
+
+        // Chống Windows ngủ khi đang tải (cho tải dài 24/7). Kiểm tra mỗi 15s.
+        _keepAwakeTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(15)
+        };
+        _keepAwakeTimer.Tick += (_, _) => KeepAwake.Set(_queue is { RunningCount: > 0 });
+        _keepAwakeTimer.Start();
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
+        _keepAwakeTimer?.Stop();
+        KeepAwake.Set(false); // cho phép ngủ lại khi thoát app
         _viewModel?.Persist();
         _server?.StopAsync().GetAwaiter().GetResult();
         _queue?.Dispose();

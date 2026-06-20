@@ -19,4 +19,10 @@ public readonly record struct ProgressReport
 
     /// <summary>Cảnh báo cho người dùng (vd: metadata cũ không khớp → tải lại từ đầu). Null nếu không có.</summary>
     public string? Warning { get; init; }
+
+    /// <summary>Số seed đang kết nối (chỉ torrent). Null với loại tải khác.</summary>
+    public int? Seeds { get; init; }
+
+    /// <summary>Tổng số peer đang kết nối (chỉ torrent). Null với loại tải khác.</summary>
+    public int? Peers { get; init; }
 }

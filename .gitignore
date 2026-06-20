@@ -35,12 +35,20 @@ tools/ffmpeg/*.exe
 ## Publish output
 publish/
 publish-*/
+dist/
+*.zip
 
 ## Artefact tạm
 applog*.txt
 ui_*.png
 *.shot.png
 settings.json
+
+## Cert ký số (KHÔNG commit khóa private)
+*.pfx
+*.cer
+*.snk
+*.p12
 
 ## OS
 .DS_Store
